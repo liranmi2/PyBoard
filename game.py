@@ -1,10 +1,10 @@
 import sys
 import pygame
 
-from gui.items import MainMenu as Main
-from gui.items import BACKGROUND, ICON
-from singlePlayer import main as singleplayermenu
-from multiplayer import main as multiplayermenu
+from gui.menu_items import MainMenu as Main
+from gui.menu_items import BACKGROUND, ICON
+from modes.single_player import main as singleplayermenu
+from modes.multiplayer import main as multiplayermenu
 # from gui.items import SinglePlayerMenu
 
 sys.stdout.flush()

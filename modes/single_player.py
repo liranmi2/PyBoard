@@ -1,8 +1,8 @@
 
 import pygame
 
-from gui.items import SinglePlayerMenu as Menu
-from gui.items import BACKGROUND, BACK, BACK_G
+from gui.menu_items import SinglePlayerMenu as Menu
+from gui.menu_items import BACKGROUND, BACK, BACK_G
 
 
 easyCoord = (330, 240, 90, 70)

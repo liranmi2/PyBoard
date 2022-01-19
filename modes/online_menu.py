@@ -1,10 +1,10 @@
 
 import pygame
 
-from gui.items import OnlineMenu as Menu
-from gui.items import BACKGROUND, BACK, BACK_G
-from createGame import main as creategamescreen
-from joinGame import main as joingamescreen
+from gui.menu_items import OnlineMenu as Menu
+from gui.menu_items import BACKGROUND, BACK, BACK_G
+from modes.online.create_game import main as creategamescreen
+from modes.online.join_game import main as joingamescreen
 
 createCoord = (250, 250, 120, 70)
 joinCoord = (270, 350, 130, 70)
@@ -46,8 +46,12 @@ def main(screen):
                     return 1
                 # if localCoord[0] < x < sum(localCoord[::2]) and localCoord[1] < y < sum(localCoord[1::2]):
                 #     play()\
-                if createCoord[0] < x < sum(createCoord[::2]) and createCoord[1] < y < sum(createCoord[1::2]):
+                if pygame.Rect(createCoord).collidepoint(pygame.mouse.get_pos()):
                     ret = creategamescreen(screen)
+                    if ret == 0:
+                        return 0
+                if pygame.Rect(joinCoord).collidepoint(pygame.mouse.get_pos()):
+                    ret = joingamescreen(screen)
                     if ret == 0:
                         return 0
         pygame.display.update()

@@ -1,9 +1,10 @@
 
 import pygame
 
-from gui.items import MultiplayerMenu as Menu
-from gui.items import BACKGROUND, BACK, BACK_G
-from online import main as onlinemenu
+from gui.menu_items import MultiplayerMenu as Menu
+from gui.menu_items import BACKGROUND, BACK, BACK_G
+from gui.board import draw_board
+from modes.online_menu import main as onlinemenu
 
 
 localCoord = (330, 250, 120, 70)
@@ -18,7 +19,15 @@ def draw_menu(screen):
     screen.blit(BACK, (50, 550))
 
 
-# def play():
+def play(screen):
+    clock = pygame.time.Clock()
+    while True:
+        clock.tick(24)
+        draw_board(screen)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return 0
+        pygame.display.update()
 
 
 def main(screen):
@@ -49,8 +58,14 @@ def main(screen):
                     return 1
                 # if localCoord[0] < x < sum(localCoord[::2]) and localCoord[1] < y < sum(localCoord[1::2]):
                 #     play()
-                if onlineCoord[0] < x < sum(onlineCoord[::2]) and onlineCoord[1] < y < sum(onlineCoord[1::2]):
+                if pygame.Rect(onlineCoord).collidepoint(pygame.mouse.get_pos()):
                     ret = onlinemenu(screen)
                     if ret == 0:
                         return 0
+                if pygame.Rect(localCoord).collidepoint(pygame.mouse.get_pos()):
+                    # draw_board(screen)
+                    ret = play(screen)
+                    if ret == 0:
+                        return 0
+
         pygame.display.update()
