@@ -3,8 +3,9 @@ import pygame
 
 from gui.menu_items import MultiplayerMenu as Menu
 from gui.menu_items import BACKGROUND, BACK, BACK_G
-from gui.board import draw_board
+from gui.board import draw_board, draw_moves, tiles
 from modes.online_menu import main as onlinemenu
+from engine.moves import LOGIC, legal_moves
 
 
 localCoord = (330, 250, 120, 70)
@@ -21,12 +22,50 @@ def draw_menu(screen):
 
 def play(screen):
     clock = pygame.time.Clock()
+    board = LOGIC
+    board[4][3], board[7][0] = board[7][0], board[4][3]
+    coord = draw_board(screen, board)
+    coord_tiles = dict(zip(tiles, coord))
+    board_tiles = dict(zip(tiles, [item for sublist in board for item in sublist]))
+    moves = None
+    pos = None
+    turn = "w"
+    # for c in coord_tiles:
+    #     print(c,coord_tiles[c])
+    # for c in board_tiles:
+    #     print(c,board_tiles[c])
     while True:
         clock.tick(24)
-        draw_board(screen)
+        # draw_board(screen, board)
+        tile = None
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return 0
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                x, y = event.pos
+                if moves is None:
+                    for i in range(len(coord)):
+                        if coord[i][0] < x < coord[i][0] + 60 and coord[i][1] < y < coord[i][1] + 60:
+                            tile = list(coord_tiles.keys())[list(coord_tiles.values()).index(coord[i])]
+                            break
+                    draw_board(screen, board)
+                    if tile is not None and board_tiles[tile] is not None:
+                        moves, pos = legal_moves(board, board_tiles[tile])
+                        # print(moves)
+                        print(board_tiles[tile])
+                        print(pos)
+                        draw_moves(screen, moves)
+                else:
+                    # pos_i = pos[0] * 8 + pos[1]
+                    for move in moves:
+                        i = move[0] * 8 + move[1]
+                        if coord[i][0] < x < coord[i][0] + 60 and coord[i][1] < y < coord[i][1] + 60:
+                            tile = list(coord_tiles.keys())[list(coord_tiles.values()).index(coord[i])]
+                            board[move[0]][move[1]], board[pos[0]][pos[1]] = board[pos[0]][pos[1]], board[move[0]][move[1]]
+                            board_tiles = dict(zip(tiles, [item for sublist in board for item in sublist]))
+                            draw_board(screen, board)
+                            moves = None
+                            break
         pygame.display.update()
 
 
