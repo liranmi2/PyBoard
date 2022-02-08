@@ -64,7 +64,8 @@ def draw_board(screen, board):
     return coord
 
 
-def draw_moves(screen, moves):
+def draw_moves(screen, moves, board):
     for move in moves:
         pygame.draw.rect(screen,(232, 187, 72), (60 * (move[1] + 2.4), 60 * (move[0] + 1.2), 58, 58))
+    draw_pieces(screen, board)
 
