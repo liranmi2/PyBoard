@@ -4,7 +4,7 @@ import pygame
 from gui.board import draw_board, draw_moves, tiles
 from gui.menu_items import BoardGame as Game
 from gui.menu_items import BACK_G
-from engine.stockfish import StockFish, getSFpath, rmSFpath
+from engine.stockfish import StockFish, get_fish_path, rm_fish_path
 
 LOGIC = [[("b", "r1"), ("b", "n1"), ("b", "b1"), ("b", "q"), ("b", "k"), ("b", "b2"), ("b", "n2"), ("b", "r2")],
          [("b", "p1"), ("b", "p2"), ("b", "p3"), ("b", "p4"), ("b", "p5"), ("b", "p6"), ("b", "p7"), ("b", "p8")],
@@ -207,35 +207,57 @@ def play(screen, mode, level=None):
     board_tiles = dict(zip(tiles, [item for sublist in board for item in sublist]))
     moves = None
     pos = None
-    turn = 0
-    turn_dict = {0: "w", 1: "b"}
     tile = None
     check = False
     checkmate = False
     condition = None
-    # if mode == "single player":
-    #     fish = StockFish(getSFpath(), level)
-    #     if not fish.isActive():
-    #         return 1
-    #     fish.startGame()
+    turn = 0
+    turn_dict = {0: "w", 1: "b"}
+    if mode == "single player":
+
+        fish_move = ""
+        fish = StockFish(get_fish_path(), level)
+        if not fish.is_active():
+            return 1
+        fish.start_game()
     while True:
         clock.tick(24)
+        if mode == "single player" and turn == 1:
+            # and fish.hasMoved():
+            fmove = fish.get_move()
+            # if board[8 - int(fmove[1])][ord("h") - ord(fmove[0])] and board[8 - int(fmove[1])][ord("h") - ord(fmove[0])][0] == "b":
+            board[8 - int(fmove[3])][ord(fmove[2])-97] = board[8 - int(fmove[1])][ord(fmove[0])-97]
+            board[8 - int(fmove[1])][ord(fmove[0])-97] = None
+            turn = (turn + 1) % 2
+            tile = None
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                fish.close()
+                if mode == "single player":
+                    fish.close()
                 return 0
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if pygame.Rect(50, 550, 120, 600).collidepoint(event.pos) or checkmate:
+                    if mode == "single player":
+                        fish.close()
+                    board = LOGIC
+                    draw_board(screen, board)
                     return 1
-                if mode == "single player" and turn == 1:
-                    continue
+                # if mode == "single player" and turn == 1:
+                #     continue
                 x, y = event.pos
                 for i in range(len(coord)):
                     if coord[i][0] < x < coord[i][0] + 60 and coord[i][1] < y < coord[i][1] + 60:
                         tile = list(coord_tiles.keys())[list(coord_tiles.values()).index(coord[i])]
+                        if mode == "single player":
+                            if moves is None:
+                                fish_move = tile
+                            else:
+                                fish_move += tile
                         if moves is not None:
                             for move in moves:
                                 if i == move[0] * 8 + move[1]:
+                                    if mode == "single player":
+                                        fish.make_move(fish_move)
                                     if board[move[0]][move[1]] is not None and board[move[0]][move[1]][1] == "k":
                                         checkmate = True
                                         if mode == "multiplayer":
@@ -246,6 +268,8 @@ def play(screen, mode, level=None):
                                     draw_board(screen, board)
                                     moves = None
                                     turn = (turn + 1) % 2
+                                    # if mode == "single player":
+                                    #     print(fish_move)
                                     break
                         break
                 check = safety_check(board)

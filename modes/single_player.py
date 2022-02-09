@@ -49,17 +49,17 @@ def main(screen):
                     return 1
 
                 if pygame.Rect(easyCoord).collidepoint(event.pos):
-                    ret = play(screen,"single player", 1)
+                    ret = play(screen, "single player", 1)
                     if ret == 0:
                         return ret
 
                 if pygame.Rect(mediumCoord).collidepoint(event.pos):
-                    ret = play(screen,"single player", 2)
+                    ret = play(screen, "single player", 2)
                     if ret == 0:
                         return ret
 
                 if pygame.Rect(hardCoord).collidepoint(event.pos):
-                    ret = play(screen,"single player", 3)
+                    ret = play(screen, "single player", 3)
                     if ret == 0:
                         return ret
 

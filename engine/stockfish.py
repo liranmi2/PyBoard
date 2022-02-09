@@ -10,19 +10,17 @@ _LEVELDATA = (
 )
 
 
-# Get path to stockfish executable from path.txt config file
-def getSFpath():
-    conffile = os.path.join("res", "stockfish", "path.txt")
-    if os.path.exists(conffile):
-        with open(conffile, "r") as f:
+def get_fish_path():
+    conf = os.path.join("src", "stockfish", "path.txt")
+    if os.path.exists(conf):
+        with open(conf, "r") as f:
             return f.read().strip()
 
 
-# Remove stockfish config path file.
-def rmSFpath():
-    os.remove(os.path.join("res", "stockfish", "path.txt"))
+def rm_fish_path():
+    os.remove(os.path.join("src", "stockfish", "path.txt"))
 
-# StockFish class to interface with stockfish chess engine.
+
 class StockFish:
     def __init__(self, path="stockfish", level=1):
         self.moves = []
@@ -42,32 +40,32 @@ class StockFish:
             if self.stockfish.stdout.readline().split()[0].lower() == "stockfish":
                 self.active = True
                 self._put("uci")
-                self.setOption("Skill Level", self.skill)
+                self.set_option("Skill Level", self.skill)
             else:
                 self.active = False
                 self.stockfish.terminate()
 
-        except:
+        except Exception:
             self.active = False
 
-    def _raiseErrorIfInactive(self):
+    def _raise_error_if_inactive(self):
         if not self.active:
             raise RuntimeError("Intergration with stockfish engine has failed")
 
     def _put(self, command):
-        self._raiseErrorIfInactive()
+        self._raise_error_if_inactive()
         self.stockfish.stdin.write(str(command) + "\n")
         self.stockfish.stdin.flush()
 
-    def _isReady(self):
-        self._raiseErrorIfInactive()
+    def _is_ready(self):
+        self._raise_error_if_inactive()
         self._put("isready")
         while True:
             if self.stockfish.stdout.readline().strip() == "readyok":
                 return
 
     def _engine(self):
-        self._isReady()
+        self._is_ready()
         self._put("position startpos moves " + " ".join(self.moves))
         self._put("go depth {} movetime {}".format(self.depth, self.movetime))
         while True:
@@ -76,54 +74,55 @@ class StockFish:
                 if msg[1] == "(none)":
                     self.q.put(None)
                 else:
+                    print(msg[1])
                     self.q.put(msg[1])
                 break
 
-    def isActive(self):
+    def is_active(self):
         return self.active
 
-    def startGame(self, moves=""):
-        self._isReady()
+    def start_game(self, moves=""):
+        self._is_ready()
         self._put("ucinewgame")
         self.moves = moves.split()
 
-    def setOption(self, name, value):
-        self._isReady()
+    def set_option(self, name, value):
+        self._is_ready()
         self._put("setoption name {} value {}".format(name, value))
 
-    def startEngine(self):
-        self._raiseErrorIfInactive()
+    def start_engine(self):
+        self._raise_error_if_inactive()
         if not self.thread.is_alive() and self.q.empty():
             self.thread = threading.Thread(target=self._engine)
             self.thread.start()
         else:
             raise RuntimeError("Could not start engine")
 
-    def makeMove(self, move):
+    def make_move(self, move):
         self.moves.append(move)
-        self.startEngine()
+        self.start_engine()
 
-    def getMove(self, block=True):
-        self._raiseErrorIfInactive()
-        if not self.hasMoved() and not block:
+    def get_move(self, block=True):
+        self._raise_error_if_inactive()
+        if not self.has_moved() and not block:
             self._put("stop")
 
         enginemove = self.q.get()
-        self.moves.append(enginemove)
+        # self.moves.append(enginemove)
         return enginemove
 
-    def hasMoved(self):
-        self._raiseErrorIfInactive()
+    def has_moved(self):
+        self._raise_error_if_inactive()
         return not self.q.empty() and not self.thread.is_alive()
 
     def undo(self, num=1):
-        self._raiseErrorIfInactive()
+        self._raise_error_if_inactive()
         if not self.thread.is_alive():
             if len(self.moves) not in range(num):
                 self.moves = self.moves[:-num]
 
     def close(self):
-        self._isReady()
+        self._is_ready()
         self._put("quit")
         self.stockfish.terminate()
         self.active = False
