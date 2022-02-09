@@ -17,16 +17,13 @@ def draw_screen(screen):
     screen.blit(BACK, (50, 550))
 
 
-# def play():
-
-
 def main(screen):
-    user_text = ''
-
-    input_rect = pygame.Rect(250, 330, 300, 75)
-    active_rect = pygame.Rect(251, 331, 298, 73)
-
-    active = False
+    # user_text = ''
+    #
+    # input_rect = pygame.Rect(250, 330, 300, 75)
+    # active_rect = pygame.Rect(251, 331, 298, 73)
+    #
+    # active = False
     clock = pygame.time.Clock()
     while True:
         clock.tick(24)
@@ -42,6 +39,8 @@ def main(screen):
                 return 0
 
             if event.type == pygame.MOUSEBUTTONDOWN:
+                if 50 < x < 120 and 550 < y < 600:
+                    return 1
         #         if input_rect.collidepoint(event.pos):
         #             active = True
         #         else:
@@ -55,8 +54,6 @@ def main(screen):
         #         else:
         #             user_text += event.unicode
         #
-                if 50 < x < 120 and 550 < y < 600:
-                    return 1
         #
         # pygame.draw.rect(screen, (255, 255, 255), input_rect, border_radius=8)
         # if active:
