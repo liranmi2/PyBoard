@@ -56,8 +56,7 @@ def minimax(side, board, check, depth=DEPTH, alpha=-INF, beta=INF):
                         new_board[pos[0]][pos[1]] = piece
                         new_board[move[0]][move[1]] = new_board[pos[0]][pos[1]]
                         new_board[pos[0]][pos[1]] = None
-                        if (piece[1] == "k" and safety_check(new_board))\
-                                or (check and safety_check(new_board)):
+                        if check and safety_check(new_board):
                             continue
                         node_val = minimax(not side, copy.deepcopy(new_board), check, depth - 1, alpha, beta)
                         if node_val > best_val:
@@ -78,8 +77,7 @@ def minimax(side, board, check, depth=DEPTH, alpha=-INF, beta=INF):
                         new_board[pos[0]][pos[1]] = piece
                         new_board[move[0]][move[1]] = new_board[pos[0]][pos[1]]
                         new_board[pos[0]][pos[1]] = None
-                        if (piece[1] == "k" and safety_check(new_board))\
-                                or (check and safety_check(new_board)):
+                        if check and safety_check(new_board):
                             continue
                         node_val = minimax(not side, copy.deepcopy(new_board), check, depth - 1, alpha, beta)
                         if node_val < best_val:

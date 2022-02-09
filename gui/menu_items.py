@@ -86,10 +86,13 @@ class JoinGameScreen:
 
 
 class BoardGame:
+    WHITE_T = small.render("White Turn", True, WHITE)
+    BLACK_T = small.render("Black Turn", True, WHITE)
     CHECK = small.render("check!", True, (220, 20, 60))
     CHECKMATE = small.render("checkmate!", True, (220, 20, 60))
     WHITE_W = large.render("White wins!", True, WHITE)
     BLACK_W = large.render("Black wins!", True, WHITE)
     WIN = large.render("You won!", True, WHITE)
     LOSE = large.render("You lost!", True, WHITE)
+
 

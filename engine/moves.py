@@ -196,13 +196,14 @@ def legal_moves(board, piece):
     return moves, pos
 
 
-def safety_check(board):
+def safety_check(board,):
     for row in board:
         for piece in row:
             if piece is not None:
                 moves, pos = legal_moves(board, piece)
                 for move in moves:
-                    if board[move[0]][move[1]] is not None and piece[0] != board[move[0]][move[1]][0] and board[move[0]][move[1]][1] == "k":
+                    if board[move[0]][move[1]] is not None and\
+                            piece[0] != board[move[0]][move[1]][0] and board[move[0]][move[1]][1] == "k":
                         return True
     return False
 
@@ -296,4 +297,10 @@ def play(screen, mode):
         if tile and board_tiles[tile] and board_tiles[tile][0] == turn_dict[turn]:
             moves, pos = legal_moves(board, board_tiles[tile])
             draw_moves(screen, moves, board)
+
+        if mode == "multiplayer":
+            if turn == 0:
+                screen.blit(Game.WHITE_T, (300, 20))
+            if turn == 1:
+                screen.blit(Game.BLACK_T, (300, 20))
         pygame.display.update()
