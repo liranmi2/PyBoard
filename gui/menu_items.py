@@ -30,6 +30,8 @@ ICON = pygame.image.load(os.path.join("src", "img", "icon.jpg"))
 BACK = small.render("Back", True, WHITE)
 BACK_G = small.render("Back", True, GRAY)
 
+# warnings
+
 
 class MainMenu:
     HEADING = heading.render("PyBoard", True, WHITE)
@@ -78,6 +80,14 @@ class CreateGameScreen:
 
 class JoinGameScreen:
     ENTER = large.render("Please enter IP address:", True, WHITE)
+
+class BoardGame:
+    CHECK = small.render("check!", True, (220, 20, 60))
+    CHECKMATE = small.render("checkmate!", True, (220, 20, 60))
+    WHITE_W = large.render("White wins!", True, WHITE)
+    BLACK_W = large.render("Black wins!", True, WHITE)
+    WIN = large.render("You won!", True, WHITE)
+    LOSE = large.render("You lost!", True, WHITE)
 
 
 # class MultiplayerMenu:
