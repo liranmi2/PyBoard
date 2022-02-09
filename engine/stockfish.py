@@ -108,7 +108,7 @@ class StockFish:
             self._put("stop")
 
         enginemove = self.q.get()
-        # self.moves.append(enginemove)
+        self.moves.append(enginemove)
         return enginemove
 
     def has_moved(self):
