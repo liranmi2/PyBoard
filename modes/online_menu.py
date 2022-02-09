@@ -44,8 +44,6 @@ def main(screen):
                 x, y = event.pos
                 if 50 < x < 120 and 550 < y < 600:
                     return 1
-                # if localCoord[0] < x < sum(localCoord[::2]) and localCoord[1] < y < sum(localCoord[1::2]):
-                #     play()\
                 if pygame.Rect(createCoord).collidepoint(pygame.mouse.get_pos()):
                     ret = creategamescreen(screen)
                     if ret == 0:

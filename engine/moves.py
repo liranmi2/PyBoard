@@ -5,7 +5,6 @@ import copy
 from gui.board import draw_board, draw_moves, tiles
 from gui.menu_items import BoardGame as Game
 from gui.menu_items import BACK_G
-from engine.stockfish import StockFish, get_fish_path, rm_fish_path
 from engine.minimax import minimax
 
 LOGIC = [[("b", "r1"), ("b", "n1"), ("b", "b1"), ("b", "q"), ("b", "k"), ("b", "b2"), ("b", "n2"), ("b", "r2")],
@@ -168,32 +167,32 @@ def legal_moves(board, piece):
     elif piece[1][0] == "p":
 
         if piece[0] == "w":
-            if pos[0] - 1 > -1 and board[pos[0]-1][pos[1]] is None:
-                moves.append((pos[0]-1, pos[1]))
-            else:
-                return None, pos
-            if pos[0] - 2 > -1 and board[pos[0]-2][pos[1]] is None and pos[0] == 6:
-                moves.append((pos[0]-2, pos[1]))
             if pos[0] - 1 > -1 and pos[1] - 1 > -1 and\
                     board[pos[0]-1][pos[1]-1] is not None and board[pos[0]-1][pos[1]-1][0] != piece[0]:
                 moves.append((pos[0]-1, pos[1]-1))
             if pos[0] - 1 > -1 and pos[1] + 1 < 8 and\
                     board[pos[0]-1][pos[1]+1] is not None and board[pos[0]-1][pos[1]+1][0] != piece[0]:
                 moves.append((pos[0]-1, pos[1]+1))
+            if pos[0] - 1 > -1 and board[pos[0]-1][pos[1]] is None:
+                moves.append((pos[0]-1, pos[1]))
+            else:
+                return moves, pos
+            if pos[0] - 2 > -1 and board[pos[0]-2][pos[1]] is None and pos[0] == 6:
+                moves.append((pos[0]-2, pos[1]))
 
         elif piece[0] == "b":
-            if pos[0] + 1 < 8 and board[pos[0]+1][pos[1]] is None:
-                moves.append((pos[0]+1, pos[1]))
-            else:
-                return None, pos
-            if pos[0] + 2 < 8 and board[pos[0]+2][pos[1]] is None and pos[0] == 1:
-                moves.append((pos[0]+2, pos[1]))
             if pos[0] + 1 < 8 and pos[1] - 1 > -1 and \
                     board[pos[0]+1][pos[1]-1] is not None and board[pos[0]+1][pos[1]-1][0] != piece[0]:
                 moves.append((pos[0]+1, pos[1]-1))
             if pos[0] + 1 < 8 and pos[1] + 1 < 8 and \
                     board[pos[0]+1][pos[1]+1] is not None and board[pos[0]+1][pos[1]+1][0] != piece[0]:
                 moves.append((pos[0]+1, pos[1]+1))
+            if pos[0] + 1 < 8 and board[pos[0]+1][pos[1]] is None:
+                moves.append((pos[0]+1, pos[1]))
+            else:
+                return moves, pos
+            if pos[0] + 2 < 8 and board[pos[0]+2][pos[1]] is None and pos[0] == 1:
+                moves.append((pos[0]+2, pos[1]))
 
     return moves, pos
 
@@ -223,56 +222,38 @@ def play(screen, mode, level=None):
     condition = None
     turn = 0
     turn_dict = {0: "w", 1: "b"}
-    if mode == "single player":
-
-        fish_move = ""
-        fish = StockFish(get_fish_path(), level)
-        if not fish.is_active():
-            return 1
-        fish.start_game("")
-        # fish.start_engine()
     while True:
         clock.tick(24)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                if mode == "single player":
-                    fish.close()
                 return 0
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if pygame.Rect(50, 550, 120, 600).collidepoint(event.pos) or checkmate:
-                    if mode == "single player":
-                        fish.close()
-                    board = LOGIC
-                    draw_board(screen, board)
+                    draw_board(screen, LOGIC)
                     return 1
-                # if mode == "single player" and turn == 1:
-                #     continue
                 x, y = event.pos
                 for i in range(len(coord)):
                     if coord[i][0] < x < coord[i][0] + 60 and coord[i][1] < y < coord[i][1] + 60:
                         tile = list(coord_tiles.keys())[list(coord_tiles.values()).index(coord[i])]
-                        if mode == "single player":
-                            if moves is None:
-                                fish_move = tile
-                            else:
-                                fish_move += tile
                         if moves is not None:
                             for move in moves:
                                 if i == move[0] * 8 + move[1]:
-                                    if mode == "single player":
-                                        fish.make_move(fish_move)
                                     if board[move[0]][move[1]] is not None and board[move[0]][move[1]][1] == "k":
                                         checkmate = True
                                         if mode == "multiplayer":
                                             condition = board[pos[0]][pos[1]][0]
+                                        elif mode == "single player":
+                                            if board[pos[0]][pos[1]][0] == "w":
+                                                condition = "win"
+                                            else:
+                                                condition = "lose"
                                     board[move[0]][move[1]] = board[pos[0]][pos[1]]
                                     board[pos[0]][pos[1]] = None
                                     board_tiles = dict(zip(tiles, [item for sublist in board for item in sublist]))
                                     draw_board(screen, board)
                                     moves = None
                                     turn = (turn + 1) % 2
-                                    print(minimax(False, board))
                                     break
                         break
                 check = safety_check(board)
@@ -289,8 +270,26 @@ def play(screen, mode, level=None):
                     screen.blit(Game.WHITE_W, (270, 270))
                 else:
                     screen.blit(Game.BLACK_W, (270, 270))
+            elif mode == "single player":
+                if condition == "win":
+                    screen.blit(Game.WIN, (270, 270))
+                else:
+                    screen.blit(Game.LOSE, (270, 270))
         elif check:
             screen.blit(Game.CHECK, (350, 20))
+        if mode == "single player" and turn == 1:
+            pos, move = minimax(True, board)
+            board[move[0]][move[1]] = board[pos[0]][pos[1]]
+            board[pos[0]][pos[1]] = None
+            if board[move[0]][move[1]] is not None and board[move[0]][move[1]][1] == "k":
+                checkmate = True
+                if board[pos[0]][pos[1]]:
+                    if board[pos[0]][pos[1]][0] == "w":
+                        condition = "win"
+                    else:
+                        condition = "lose"
+            turn = 0
+            tile = None
         x, y = pygame.mouse.get_pos()
         if 50 < x < 120 and 550 < y < 600:
             screen.blit(BACK_G, (50, 550))

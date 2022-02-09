@@ -52,13 +52,15 @@ def minimax(side, board, depth=DEPTH, alpha=-INF, beta=INF):
                     moves, pos = legal_moves(board, piece)
                     for move in moves:
                         new_board = copy.deepcopy(board)
+                        new_board[pos[0]][pos[1]] = piece
                         new_board[move[0]][move[1]] = new_board[pos[0]][pos[1]]
                         new_board[pos[0]][pos[1]] = None
-                        node_val = minimax(not side, new_board, depth - 1, alpha, beta)
+                        print(side)
+                        node_val = minimax(not side, copy.deepcopy(new_board), depth - 1, alpha, beta)
                         if node_val > best_val:
                             best_val = node_val
                             if depth == DEPTH:
-                                best_move = (piece, list(move))
+                                best_move = (list(pos), list(move))
                         alpha = max(alpha, best_val)
                         if alpha >= beta:
                             break
@@ -70,9 +72,11 @@ def minimax(side, board, depth=DEPTH, alpha=-INF, beta=INF):
                     moves, pos = legal_moves(board, piece)
                     for move in moves:
                         new_board = copy.deepcopy(board)
+                        new_board[pos[0]][pos[1]] = piece
                         new_board[move[0]][move[1]] = new_board[pos[0]][pos[1]]
                         new_board[pos[0]][pos[1]] = None
-                        node_val = minimax(side, new_board, depth - 1, alpha, beta)
+                        print(side)
+                        node_val = minimax(not side, copy.deepcopy(new_board), depth - 1, alpha, beta)
                         if node_val < best_val:
                             best_val = node_val
                             if depth == DEPTH:

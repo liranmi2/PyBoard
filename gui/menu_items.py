@@ -30,7 +30,7 @@ ICON = pygame.image.load(os.path.join("src", "img", "icon.jpg"))
 BACK = small.render("Back", True, WHITE)
 BACK_G = small.render("Back", True, GRAY)
 
-# warnings
+SOON = large.render("Coming Soon...", True, WHITE)
 
 
 class MainMenu:

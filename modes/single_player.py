@@ -2,7 +2,7 @@
 import pygame
 
 from gui.menu_items import SinglePlayerMenu as Menu
-from gui.menu_items import BACKGROUND, BACK, BACK_G
+from gui.menu_items import BACKGROUND, BACK, BACK_G, SOON
 from engine.moves import play
 
 
@@ -22,9 +22,18 @@ def draw_menu(screen):
 
 def main(screen):
     clock = pygame.time.Clock()
+    soon = False
     while True:
         clock.tick(24)
         draw_menu(screen)
+        if soon:
+            s = pygame.Surface((750, 650))
+            s.set_alpha(128)
+            s.fill((0, 0, 0))
+            screen.blit(s, (0, 0))
+            screen.blit(SOON, (200, 270))
+            screen.blit(BACK, (50, 550))
+
         x, y = pygame.mouse.get_pos()
 
         # Menu items will turn gray while hovering them
@@ -49,18 +58,14 @@ def main(screen):
                     return 1
 
                 if pygame.Rect(easyCoord).collidepoint(event.pos):
-                    ret = play(screen, "single player", 1)
+                    ret = play(screen, "single player")
                     if ret == 0:
                         return ret
 
                 if pygame.Rect(mediumCoord).collidepoint(event.pos):
-                    ret = play(screen, "single player", 2)
-                    if ret == 0:
-                        return ret
+                    soon = True
 
                 if pygame.Rect(hardCoord).collidepoint(event.pos):
-                    ret = play(screen, "single player", 3)
-                    if ret == 0:
-                        return ret
+                    soon = True
 
         pygame.display.update()

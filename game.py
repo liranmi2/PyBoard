@@ -5,7 +5,7 @@ from gui.menu_items import MainMenu as Main
 from gui.menu_items import BACKGROUND, ICON
 from modes.single_player import main as singleplayermenu
 from modes.multiplayer import main as multiplayermenu
-# from gui.items import SinglePlayerMenu
+from engine.moves import play
 
 sys.stdout.flush()
 pygame.init()
@@ -56,15 +56,11 @@ if __name__ == "__main__":
                     ret = singleplayermenu(screen)
                     if ret == 0:
                         run = False
-                    # elif ret != 1:
-                    #     run = board.singleplayer(win, ret[1], ret[2], prefs)
 
                 elif pygame.Rect(multiCoord).collidepoint(event.pos):
                     ret = multiplayermenu(screen)
                     if ret == 0:
                         run = False
-                    # elif ret != 1:
-                    #     run = chess.multiplayer(win, ret[0], ret[1], prefs)
 
         pygame.display.flip()
 
