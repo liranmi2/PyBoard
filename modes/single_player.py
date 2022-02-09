@@ -26,6 +26,8 @@ def main(screen):
     while True:
         clock.tick(24)
         draw_menu(screen)
+
+        x, y = pygame.mouse.get_pos()
         if soon:
             s = pygame.Surface((750, 650))
             s.set_alpha(128)
@@ -33,18 +35,16 @@ def main(screen):
             screen.blit(s, (0, 0))
             screen.blit(SOON, (200, 270))
             screen.blit(BACK, (50, 550))
+        else:
+            # Menu items will turn gray while hovering them
+            if pygame.Rect(easyCoord).collidepoint(pygame.mouse.get_pos()):
+                screen.blit(Menu.EASY_G, easyCoord[:2])
 
-        x, y = pygame.mouse.get_pos()
+            if pygame.Rect(mediumCoord).collidepoint(pygame.mouse.get_pos()):
+                screen.blit(Menu.MEDIUM_G, mediumCoord[:2])
 
-        # Menu items will turn gray while hovering them
-        if pygame.Rect(easyCoord).collidepoint(pygame.mouse.get_pos()):
-            screen.blit(Menu.EASY_G, easyCoord[:2])
-
-        if pygame.Rect(mediumCoord).collidepoint(pygame.mouse.get_pos()):
-            screen.blit(Menu.MEDIUM_G, mediumCoord[:2])
-
-        if pygame.Rect(hardCoord).collidepoint(pygame.mouse.get_pos()):
-            screen.blit(Menu.HARD_G, hardCoord[:2])
+            if pygame.Rect(hardCoord).collidepoint(pygame.mouse.get_pos()):
+                screen.blit(Menu.HARD_G, hardCoord[:2])
 
         if 50 < x < 120 and 550 < y < 600:
             screen.blit(BACK_G, (50, 550))
@@ -55,17 +55,20 @@ def main(screen):
             elif event.type == pygame.MOUSEBUTTONDOWN:
 
                 if pygame.Rect(50, 550, 120, 600).collidepoint(event.pos):
-                    return 1
+                    if soon:
+                        soon = not soon
+                    else:
+                        return 1
+                if not soon:
+                    if pygame.Rect(easyCoord).collidepoint(event.pos):
+                        ret = play(screen, "single player")
+                        if ret == 0:
+                            return ret
 
-                if pygame.Rect(easyCoord).collidepoint(event.pos):
-                    ret = play(screen, "single player")
-                    if ret == 0:
-                        return ret
+                    if pygame.Rect(mediumCoord).collidepoint(event.pos):
+                        soon = True
 
-                if pygame.Rect(mediumCoord).collidepoint(event.pos):
-                    soon = True
-
-                if pygame.Rect(hardCoord).collidepoint(event.pos):
-                    soon = True
+                    if pygame.Rect(hardCoord).collidepoint(event.pos):
+                        soon = True
 
         pygame.display.update()

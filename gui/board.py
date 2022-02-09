@@ -1,9 +1,10 @@
 import os.path
 import pygame
 
-from gui.menu_items import BACKGROUND, BACK, BACK_G
+from gui.menu_items import BACKGROUND, BACK, letter
 
 PIECES = {}
+YELLOW = (232, 187, 72)
 
 coord = list()
 tiles = ["a8", "b8", "c8", "d8", "e8", "f8", "g8", "h8",
@@ -14,6 +15,19 @@ tiles = ["a8", "b8", "c8", "d8", "e8", "f8", "g8", "h8",
          "a3", "b3", "c3", "d3", "e3", "f3", "g3", "h3",
          "a2", "b2", "c2", "d2", "e2", "f2", "g2", "h2",
          "a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1"]
+
+
+def draw_letter_numbers(screen):
+    x, y = 170, 555
+    for lett in ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']:
+        temp = letter.render(lett, True, YELLOW)
+        screen.blit(temp, (x, y))
+        x += 60
+    x, y = 120, 90
+    for i in range(8, 0, -1):
+        temp = letter.render(str(i), True, YELLOW)
+        screen.blit(temp, (x, y))
+        y += 60
 
 
 def init_pieces(screen):
@@ -44,12 +58,13 @@ def draw_board(screen, board):
                 pygame.draw.rect(screen, (88, 44, 44), (60 * (x+0.4), 60 * (y+0.2), 60, 60))
             coord.append((60 * (x+0.4), 60 * (y+0.2)))
     draw_pieces(screen, board)
+    draw_letter_numbers(screen)
     return coord
 
 
 def draw_moves(screen, moves, board):
     if moves:
         for move in moves:
-            pygame.draw.rect(screen,(232, 187, 72), (60 * (move[1] + 2.4), 60 * (move[0] + 1.2), 58, 58))
+            pygame.draw.rect(screen, YELLOW, (60 * (move[1] + 2.4), 60 * (move[0] + 1.2), 58, 58))
     draw_pieces(screen, board)
 

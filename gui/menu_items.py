@@ -6,6 +6,7 @@ import pygame
 pygame.font.init()
 
 # font
+BFONT = os.path.join("src", "fonts", "PostNoBillsColombo-Bold.ttf")
 HFONT = os.path.join("src", "fonts", "PostNoBillsColombo-Medium.ttf")
 SHFONT = os.path.join("src", "fonts", "PostNoBillsColombo-Regular.ttf")
 FONT = os.path.join("src", "fonts", "PostNoBillsColombo-Light.ttf")
@@ -17,6 +18,7 @@ large = pygame.font.Font(FONT, 60)
 medium = pygame.font.Font(FONT, 55)
 small = pygame.font.Font(FONT, 40)
 tiny = pygame.font.Font(HFONT, 18)
+letter = pygame.font.Font(BFONT, 20)
 
 # colors
 WHITE = (255, 255, 255)

@@ -5,7 +5,6 @@ from gui.menu_items import MainMenu as Main
 from gui.menu_items import BACKGROUND, ICON
 from modes.single_player import main as singleplayermenu
 from modes.multiplayer import main as multiplayermenu
-from engine.moves import play
 
 sys.stdout.flush()
 pygame.init()
@@ -28,7 +27,6 @@ def draw_main_menu():
     screen.blit(Main.SINGLE, singleCoord[:2])
     screen.blit(Main.MULTI, multiCoord[:2])
     screen.blit(Main.COPY, (140, 600))
-    # pygame.draw.rect(screen, (255, 255, 255), (350, 300, 70, 70), 4, 8)
 
 
 if __name__ == "__main__":

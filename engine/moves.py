@@ -25,7 +25,6 @@ def legal_moves(board, piece):
     try:
         pos = pos[0]
     except IndexError:
-        print(pos)
         return None, None
     moves = list()
 

@@ -6,8 +6,8 @@ from gui.menu_items import BACKGROUND, BACK, BACK_G
 from modes.online.create_game import main as creategamescreen
 from modes.online.join_game import main as joingamescreen
 
-createCoord = (250, 250, 120, 70)
-joinCoord = (270, 350, 130, 70)
+createCoord = (250, 250, 270, 70)
+joinCoord = (270, 350, 230, 70)
 
 
 def draw_menu(screen):

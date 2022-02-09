@@ -19,9 +19,6 @@ def draw_screen(screen):
     screen.blit(BACK, (50, 550))
 
 
-# def play():
-
-
 def main(screen):
     clock = pygame.time.Clock()
     while True:
