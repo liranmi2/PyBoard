@@ -278,18 +278,19 @@ def play(screen, mode):
         elif check:
             screen.blit(Game.CHECK, (350, 20))
         if mode == "single player" and turn == 1:
-            pos, move = minimax(True, board)
-            board[move[0]][move[1]] = board[pos[0]][pos[1]]
-            board[pos[0]][pos[1]] = None
-            if board[move[0]][move[1]] is not None and board[move[0]][move[1]][1] == "k":
+            if check and board[move[0]][move[1]] is not None and board[move[0]][move[1]][1] == "k":
                 checkmate = True
                 if board[pos[0]][pos[1]]:
                     if board[pos[0]][pos[1]][0] == "w":
                         condition = "win"
                     else:
                         condition = "lose"
+            pos, move = minimax(True, board, check)
+            board[move[0]][move[1]] = board[pos[0]][pos[1]]
+            board[pos[0]][pos[1]] = None
             turn = 0
             tile = None
+            check = safety_check(board)
         x, y = pygame.mouse.get_pos()
         if 50 < x < 120 and 550 < y < 600:
             screen.blit(BACK_G, (50, 550))

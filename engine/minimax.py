@@ -1,4 +1,4 @@
-# from engine.moves import legal_moves
+
 import copy
 
 from engine.heuristics import *
@@ -40,8 +40,8 @@ def evaluate(board):
     return score
 
 
-def minimax(side, board, depth=DEPTH, alpha=-INF, beta=INF):
-    from engine.moves import legal_moves
+def minimax(side, board, check, depth=DEPTH, alpha=-INF, beta=INF):
+    from engine.moves import legal_moves, safety_check
     if depth == 0:
         return evaluate(board)
     if not side:
@@ -55,8 +55,9 @@ def minimax(side, board, depth=DEPTH, alpha=-INF, beta=INF):
                         new_board[pos[0]][pos[1]] = piece
                         new_board[move[0]][move[1]] = new_board[pos[0]][pos[1]]
                         new_board[pos[0]][pos[1]] = None
-                        print(side)
-                        node_val = minimax(not side, copy.deepcopy(new_board), depth - 1, alpha, beta)
+                        if check and safety_check(new_board):
+                            continue
+                        node_val = minimax(not side, copy.deepcopy(new_board), check, depth - 1, alpha, beta)
                         if node_val > best_val:
                             best_val = node_val
                             if depth == DEPTH:
@@ -75,7 +76,9 @@ def minimax(side, board, depth=DEPTH, alpha=-INF, beta=INF):
                         new_board[pos[0]][pos[1]] = piece
                         new_board[move[0]][move[1]] = new_board[pos[0]][pos[1]]
                         new_board[pos[0]][pos[1]] = None
-                        node_val = minimax(not side, copy.deepcopy(new_board), depth - 1, alpha, beta)
+                        if check and safety_check(new_board):
+                            continue
+                        node_val = minimax(not side, copy.deepcopy(new_board), check, depth - 1, alpha, beta)
                         if node_val < best_val:
                             best_val = node_val
                             if depth == DEPTH:
