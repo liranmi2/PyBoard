@@ -45,7 +45,7 @@ class StockFish:
                 self.active = False
                 self.stockfish.terminate()
 
-        except Exception:
+        except:
             self.active = False
 
     def _raise_error_if_inactive(self):
@@ -74,7 +74,6 @@ class StockFish:
                 if msg[1] == "(none)":
                     self.q.put(None)
                 else:
-                    print(msg[1])
                     self.q.put(msg[1])
                 break
 
@@ -106,7 +105,7 @@ class StockFish:
         self._raise_error_if_inactive()
         if not self.has_moved() and not block:
             self._put("stop")
-
+        print(list(self.q.queue))
         enginemove = self.q.get()
         self.moves.append(enginemove)
         return enginemove

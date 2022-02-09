@@ -6,6 +6,7 @@ from gui.board import draw_board, draw_moves, tiles
 from gui.menu_items import BoardGame as Game
 from gui.menu_items import BACK_G
 from engine.stockfish import StockFish, get_fish_path, rm_fish_path
+from engine.minimax import minimax
 
 LOGIC = [[("b", "r1"), ("b", "n1"), ("b", "b1"), ("b", "q"), ("b", "k"), ("b", "b2"), ("b", "n2"), ("b", "r2")],
          [("b", "p1"), ("b", "p2"), ("b", "p3"), ("b", "p4"), ("b", "p5"), ("b", "p6"), ("b", "p7"), ("b", "p8")],
@@ -169,6 +170,8 @@ def legal_moves(board, piece):
         if piece[0] == "w":
             if pos[0] - 1 > -1 and board[pos[0]-1][pos[1]] is None:
                 moves.append((pos[0]-1, pos[1]))
+            else:
+                return None, pos
             if pos[0] - 2 > -1 and board[pos[0]-2][pos[1]] is None and pos[0] == 6:
                 moves.append((pos[0]-2, pos[1]))
             if pos[0] - 1 > -1 and pos[1] - 1 > -1 and\
@@ -181,6 +184,8 @@ def legal_moves(board, piece):
         elif piece[0] == "b":
             if pos[0] + 1 < 8 and board[pos[0]+1][pos[1]] is None:
                 moves.append((pos[0]+1, pos[1]))
+            else:
+                return None, pos
             if pos[0] + 2 < 8 and board[pos[0]+2][pos[1]] is None and pos[0] == 1:
                 moves.append((pos[0]+2, pos[1]))
             if pos[0] + 1 < 8 and pos[1] - 1 > -1 and \
@@ -224,42 +229,11 @@ def play(screen, mode, level=None):
         fish = StockFish(get_fish_path(), level)
         if not fish.is_active():
             return 1
-        fish.start_game()
+        fish.start_game("")
+        # fish.start_engine()
     while True:
         clock.tick(24)
-        if mode == "single player" and turn == 1 and fish.has_moved():
-            # and fish.hasMoved():
-            fmove = fish.get_move()
-            print(8-int(fmove[1]))
-            print(ord(fmove[0])-97)
-            print(board[8-int(fmove[1])][ord(fmove[0])-97])
-            if board[8-int(fmove[1])][ord(fmove[0])-97] and  board[8-int(fmove[1])][ord(fmove[0])-97][1] == "k":
-                checkmate = True
-                break
-            while board[8-int(fmove[1])][ord(fmove[0])-97] is None \
-                    or board[8-int(fmove[1])][ord(fmove[0])-97][0] == "w":
-                fish.make_move(fmove)
-                fmove = fish.get_move()
-                print(board[8-int(fmove[1])][ord(fmove[0])-97])
-            board[8-int(fmove[3])][ord(fmove[2])-97] = board[8-int(fmove[1])][ord(fmove[0])-97]
-            board[8-int(fmove[1])][ord(fmove[0])-97] = None
-            turn = (turn + 1) % 2
-            check = safety_check(board)
-            tile = None
-        if checkmate:
-            draw_board(screen, board)
-            s = pygame.Surface((750, 650))
-            s.set_alpha(128)
-            s.fill((0, 0, 0))
-            screen.blit(Game.CHECKMATE, (300, 20))
-            screen.blit(s, (0, 0))
-            if mode == "multiplayer":
-                if condition == "w":
-                    screen.blit(Game.WHITE_W, (270, 270))
-                else:
-                    screen.blit(Game.BLACK_W, (270, 270))
-        elif check:
-            screen.blit(Game.CHECK, (350, 20))
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 if mode == "single player":
@@ -298,10 +272,25 @@ def play(screen, mode, level=None):
                                     draw_board(screen, board)
                                     moves = None
                                     turn = (turn + 1) % 2
+                                    print(minimax(False, board))
                                     break
                         break
                 check = safety_check(board)
         draw_board(screen, board)
+        if checkmate:
+            draw_board(screen, board)
+            s = pygame.Surface((750, 650))
+            s.set_alpha(128)
+            s.fill((0, 0, 0))
+            screen.blit(Game.CHECKMATE, (300, 20))
+            screen.blit(s, (0, 0))
+            if mode == "multiplayer":
+                if condition == "w":
+                    screen.blit(Game.WHITE_W, (270, 270))
+                else:
+                    screen.blit(Game.BLACK_W, (270, 270))
+        elif check:
+            screen.blit(Game.CHECK, (350, 20))
         x, y = pygame.mouse.get_pos()
         if 50 < x < 120 and 550 < y < 600:
             screen.blit(BACK_G, (50, 550))
