@@ -5,12 +5,12 @@ import pygame
 
 pygame.font.init()
 
-# headings and labels
-
+# font
 HFONT = os.path.join("src", "fonts", "PostNoBillsColombo-Medium.ttf")
 SHFONT = os.path.join("src", "fonts", "PostNoBillsColombo-Regular.ttf")
 FONT = os.path.join("src", "fonts", "PostNoBillsColombo-Light.ttf")
 
+# templates
 heading = pygame.font.Font(HFONT, 105)
 small_heading = pygame.font.Font(HFONT, 70)
 large = pygame.font.Font(FONT, 60)
@@ -18,9 +18,9 @@ medium = pygame.font.Font(FONT, 55)
 small = pygame.font.Font(FONT, 40)
 tiny = pygame.font.Font(HFONT, 18)
 
+# colors
 WHITE = (255, 255, 255)
 GRAY = (190, 190, 190)
-
 
 # images
 BACKGROUND = pygame.image.load(os.path.join("src", "img", "bg.jpg"))
@@ -30,6 +30,7 @@ ICON = pygame.image.load(os.path.join("src", "img", "icon.jpg"))
 BACK = small.render("Back", True, WHITE)
 BACK_G = small.render("Back", True, GRAY)
 
+# pop up
 SOON = large.render("Coming Soon...", True, WHITE)
 
 
@@ -69,8 +70,8 @@ class OnlineMenu:
 
 
 def ipaddress(address):
-    ipadd = small.render(address, True, WHITE)
-    return ipadd
+    ip_add = small.render(address, True, WHITE)
+    return ip_add
 
 
 class CreateGameScreen:
@@ -81,6 +82,7 @@ class CreateGameScreen:
 class JoinGameScreen:
     ENTER = large.render("Please enter IP address:", True, WHITE)
 
+
 class BoardGame:
     CHECK = small.render("check!", True, (220, 20, 60))
     CHECKMATE = small.render("checkmate!", True, (220, 20, 60))
@@ -89,11 +91,3 @@ class BoardGame:
     WIN = large.render("You won!", True, WHITE)
     LOSE = large.render("You lost!", True, WHITE)
 
-
-# class MultiplayerMenu:
-#
-#
-#
-# class OnlineMenu:
-#
-#

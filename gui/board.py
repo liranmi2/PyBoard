@@ -17,11 +17,11 @@ tiles = ["a8", "b8", "c8", "d8", "e8", "f8", "g8", "h8",
 
 
 def init_pieces(screen):
-    for ptype in ["r", "n", "b", "q", "k", "p"]:
+    for p_type in ["r", "n", "b", "q", "k", "p"]:
         for color in ["w", "b"]:
-            PIECES[color+ptype] = pygame.image.load(os.path.join("src", "img", color+"_"+ptype+".png"))
-            PIECES[color+ptype] = pygame.transform.scale(PIECES[color+ptype], (60, 60))
-            PIECES[color+ptype] = PIECES[color+ptype].convert_alpha(screen)
+            PIECES[color+p_type] = pygame.image.load(os.path.join("src", "img", color+"_"+p_type+".png"))
+            PIECES[color+p_type] = pygame.transform.scale(PIECES[color+p_type], (60, 60))
+            PIECES[color+p_type] = PIECES[color+p_type].convert_alpha(screen)
 
 
 def draw_pieces(screen, board):
@@ -31,21 +31,6 @@ def draw_pieces(screen, board):
             if board[i][j] is not None:
                 piece = board[i][j][0] + board[i][j][1][0]
                 screen.blit(PIECES[piece], (60 * (j+2.4), 60 * (i+1.2)))
-    # draw black
-    # for x in range(8):
-    #     if x > 4:
-    #         screen.blit(PIECES[1][7 - x], (60 * (x+2.4), 60 * 1.2))
-    #     else:
-    #         screen.blit(PIECES[1][x], (60 * (x+2.4), 60 * 1.2))
-    #     screen.blit(PIECES[1][5], (60 * (x + 2.4), 60 * 2.2))
-    #
-    # # draw white
-    # for x in range(8):
-    #     if x > 4:
-    #         screen.blit(PIECES[0][7 - x], (60 * (x+2.4), 60 * 8.2))
-    #     else:
-    #         screen.blit(PIECES[0][x], (60 * (x+2.4), 60 * 8.2))
-    #     screen.blit(PIECES[0][5], (60 * (x + 2.4), 60 * 7.2))
 
 
 def draw_board(screen, board):
@@ -58,14 +43,13 @@ def draw_board(screen, board):
             if (x + y) % 2 == 0:
                 pygame.draw.rect(screen, (88, 44, 44), (60 * (x+0.4), 60 * (y+0.2), 60, 60))
             coord.append((60 * (x+0.4), 60 * (y+0.2)))
-            # else:
-            #     pygame.draw.rect(screen, (220, 240, 240), (100 * x, 100 * y, 100, 100))
     draw_pieces(screen, board)
     return coord
 
 
 def draw_moves(screen, moves, board):
-    for move in moves:
-        pygame.draw.rect(screen,(232, 187, 72), (60 * (move[1] + 2.4), 60 * (move[0] + 1.2), 58, 58))
+    if moves:
+        for move in moves:
+            pygame.draw.rect(screen,(232, 187, 72), (60 * (move[1] + 2.4), 60 * (move[0] + 1.2), 58, 58))
     draw_pieces(screen, board)
 

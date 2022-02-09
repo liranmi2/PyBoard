@@ -75,7 +75,6 @@ def minimax(side, board, depth=DEPTH, alpha=-INF, beta=INF):
                         new_board[pos[0]][pos[1]] = piece
                         new_board[move[0]][move[1]] = new_board[pos[0]][pos[1]]
                         new_board[pos[0]][pos[1]] = None
-                        print(side)
                         node_val = minimax(not side, copy.deepcopy(new_board), depth - 1, alpha, beta)
                         if node_val < best_val:
                             best_val = node_val

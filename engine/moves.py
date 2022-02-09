@@ -7,7 +7,7 @@ from gui.menu_items import BoardGame as Game
 from gui.menu_items import BACK_G
 from engine.minimax import minimax
 
-LOGIC = [[("b", "r1"), ("b", "n1"), ("b", "b1"), ("b", "q"), ("b", "k"), ("b", "b2"), ("b", "n2"), ("b", "r2")],
+START = [[("b", "r1"), ("b", "n1"), ("b", "b1"), ("b", "q"), ("b", "k"), ("b", "b2"), ("b", "n2"), ("b", "r2")],
          [("b", "p1"), ("b", "p2"), ("b", "p3"), ("b", "p4"), ("b", "p5"), ("b", "p6"), ("b", "p7"), ("b", "p8")],
          [None,       None,       None,       None,       None,       None,       None,       None],
          [None,       None,       None,       None,       None,       None,       None,       None],
@@ -208,9 +208,9 @@ def safety_check(board):
     return False
 
 
-def play(screen, mode, level=None):
+def play(screen, mode):
     clock = pygame.time.Clock()
-    board = copy.deepcopy(LOGIC)
+    board = copy.deepcopy(START)
     coord = draw_board(screen, board)
     coord_tiles = dict(zip(tiles, coord))
     board_tiles = dict(zip(tiles, [item for sublist in board for item in sublist]))
@@ -230,7 +230,7 @@ def play(screen, mode, level=None):
                 return 0
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if pygame.Rect(50, 550, 120, 600).collidepoint(event.pos) or checkmate:
-                    draw_board(screen, LOGIC)
+                    draw_board(screen, START)
                     return 1
                 x, y = event.pos
                 for i in range(len(coord)):
