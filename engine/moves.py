@@ -299,8 +299,8 @@ def play(screen, mode):
             draw_moves(screen, moves, board)
 
         if mode == "multiplayer":
-            if turn == 0:
+            if turn == 0 and not check and not checkmate:
                 screen.blit(Game.WHITE_T, (300, 20))
-            if turn == 1:
+            if turn == 1 and not check and not checkmate:
                 screen.blit(Game.BLACK_T, (300, 20))
         pygame.display.update()
